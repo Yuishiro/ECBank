@@ -28,7 +28,24 @@ public class Account {
 	public void setBalance(double amount) {
 		this.balance += amount;
 	}
-
+	
+	// 1.3.5 Updating accounts
+	public void setBalance(Flow flow) {
+		if (flow instanceof Debit) {
+			this.balance -= flow.getAmount();
+		}
+		else if (flow instanceof Credit) {
+			this.balance += flow.getAmount();
+		}
+		else if (flow instanceof Transfert transfer) {
+			if (this.accountNumber == transfer.getTargetAccount()) {
+				this.balance += transfer.getAmount();
+			}
+			else if (this.accountNumber == transfer.getIssuingAccount()) {
+				this.balance -= flow.getAmount();
+			}
+		}
+	}
 	
 	public double getBalance() {
 		return this.balance;
