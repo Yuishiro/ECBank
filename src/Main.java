@@ -2,10 +2,13 @@ import components.*;
 import java.util.*;
 
 
+
 public class Main {
 	
 	static List<Client> clients;
-	static List<Account> accounts;;
+	static List<Account> accounts;
+	static HashMap<Integer, Account> hash;
+
 	
 	// 1.1.2  Creation of main class for tests
 	public static List<Client> loadClients(int numbersOfClients) {
@@ -39,6 +42,22 @@ public class Main {
 		accounts.stream().forEach(account -> System.out.println(account.toString()));
 	}
 	
+	// 1.3.1 Adaptation of the table of accounts
+	public static HashMap<Integer, Account> createHashMap(List<Account> accounts) {
+		HashMap<Integer, Account> hash = new HashMap<Integer, Account>();
+		
+		for (Iterator<Account> iterator = accounts.iterator(); iterator.hasNext();) {
+			Account account = iterator.next();
+			hash.put(account.getAccountNumber(), account);
+		}
+		
+		return hash;
+	}
+
+	public static void displayHash(HashMap<Integer, Account> hash) {
+		hash.entrySet().stream().sorted(Map.Entry.comparingByValue(
+				(o1, o2) -> Double.compare(o1.getBalance(), o2.getBalance()))).forEach(s -> System.out.println(s.toString()));
+	}
 	
 	
 	public static void main(String[] args) {
@@ -47,6 +66,11 @@ public class Main {
 		
 		accounts = loadAccounts(clients);
 		
-		displayAccounts(accounts);
+		//displayAccounts(accounts);
+		
+		hash = createHashMap(accounts);
+			
+		displayHash(hash);
+
 	}
 }
