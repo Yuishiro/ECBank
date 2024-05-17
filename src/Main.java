@@ -2,13 +2,12 @@ import components.*;
 import java.util.*;
 
 
-
 public class Main {
 	
 	static List<Client> clients;
 	static List<Account> accounts;
 	static HashMap<Integer, Account> hash;
-
+	static Flow[] flows;
 	
 	// 1.1.2  Creation of main class for tests
 	public static List<Client> loadClients(int numbersOfClients) {
@@ -59,18 +58,53 @@ public class Main {
 				(o1, o2) -> Double.compare(o1.getBalance(), o2.getBalance()))).forEach(s -> System.out.println(s.toString()));
 	}
 	
+	// 1.3.4 Creation of the flow array
+	public static Flow[] loadFlows() {
+		Flow[] flows = new Flow[12];
+		
+		LocalDate localDate = LocalDate.now().plusDays(2);
+		Date date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+		
+		flows[0] = new Debit("debit", 1, 50.0, 1, true, date);
+		
+		int index = 1;
+		for (int i = 1; i < 10; i+=2) {
+			flows[index] = new Credit("credit", index, 100.50, i, false, date);
+			index++;
+		}
+		
+		for (int i = 2; i < 11; i+=2) {
+			flows[index] = new Credit("credit", index, 1500, i, false, date);
+			index++;
+		}
+		
+		flows[index] = new Transfert("transfer", index, 50.0, 2, false, date, 1);
+		
+		return flows;
+		
+	}
+	
+
 	
 	public static void main(String[] args) {
-		clients = loadClients(5);
+		//clients = loadClients(5);
 		//displayClient(clients);
 		
-		accounts = loadAccounts(clients);
+		//accounts = loadAccounts(clients);
 		
 		//displayAccounts(accounts);
 		
-		hash = createHashMap(accounts);
-			
-		displayHash(hash);
+		//hash = createHashMap(accounts);
+		
+		flows = loadFlows();
+		//flows = loadFlows("flow.json");
+		//applyFlow(hash, flows);
+		
+		//displayHash(hash);
+		
+
+		
+		
 
 	}
 }
