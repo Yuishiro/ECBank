@@ -1,7 +1,10 @@
 import components.*;
 import java.util.*;
+import java.util.function.Predicate;
 
-
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.io.File;
 public class Main {
 	
 	static List<Client> clients;
@@ -84,23 +87,45 @@ public class Main {
 		
 	}
 	
+	// 1.3.5 Updating accounts
+	public static void applyFlow(HashMap<Integer, Account> accounts, Flow[] flows) {
+		Predicate<Double> isnegativePredicate = i -> (i < 0);
+		
+		for (int i = 0; i < flows.length; i++) {
+			int accountsTargetID = flows[i].getTargetAccount();
+			Account targetAccount = accounts.get(accountsTargetID);
+			
+			targetAccount.setBalance(flows[i]);
+			
+			if (flows[i] instanceof Transfert transfert) {
+				int issuingAccountID = transfert.getIssuingAccount();
+				Account issuingAccount = accounts.get(issuingAccountID);
+				issuingAccount.setBalance(transfert);
+			}
+		}
+		
+		accounts.values().stream().forEach(acc -> {
+			if (isnegativePredicate.test(acc.getBalance())) {
+				System.out.println("Negative balance of account number: " + acc.getAccountNumber());
+			}
+		});
+	}
 
 	
 	public static void main(String[] args) {
-		//clients = loadClients(5);
+		clients = loadClients(5);
 		//displayClient(clients);
 		
-		//accounts = loadAccounts(clients);
+		accounts = loadAccounts(clients);
 		
 		//displayAccounts(accounts);
 		
-		//hash = createHashMap(accounts);
+		hash = createHashMap(accounts);
 		
 		flows = loadFlows();
-		//flows = loadFlows("flow.json");
-		//applyFlow(hash, flows);
+		applyFlow(hash, flows);
 		
-		//displayHash(hash);
+		displayHash(hash);
 		
 
 		
