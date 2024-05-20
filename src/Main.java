@@ -176,6 +176,7 @@ public class Main {
 		return flows;
 	}
 	
+	// 2.2 XML file of account
 	public static List<Account> loadAccounts(String path) throws SAXException, IOException {
 		Path filePath = Paths.get(path);
 		List<Account> accounts = new ArrayList<>();
@@ -192,7 +193,6 @@ public class Main {
 				Node node = nodeList.item(i);
 				NodeList children = node.getChildNodes();
 				
-				// A refacto
 				for (int j = 0; j < children.getLength(); j++) {
 					if (children.item(j).getNodeType() == 1 && "label".equals(children.item(j).getNodeName())) {
 						label = children.item(j).getTextContent();
@@ -235,7 +235,7 @@ public class Main {
 		
 		//accounts = loadAccounts(clients);
 		accounts = loadAccounts("accounts.xml");
-		//displayAccounts(accounts);
+		displayAccounts(accounts);
 		
 		hash = createHashMap(accounts);
 		
