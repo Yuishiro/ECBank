@@ -11,7 +11,7 @@ public abstract class Flow {
 	private boolean effect;
 	private Date date;
 	
-	public Flow(String comment, int id, double amount, int targetAccount, boolean effect, Date date) {
+	protected Flow(String comment, int id, double amount, int targetAccount, boolean effect, Date date) {
 		this.comment = comment;
 		this.id = id;
 		this.amount = amount;
@@ -52,7 +52,7 @@ public abstract class Flow {
 		this.targetAccount = targetAccount;
 	}
 
-	public boolean isEffect() {
+	public boolean getEffect() {
 		return effect;
 	}
 
