@@ -2,9 +2,25 @@ import components.*;
 import java.util.*;
 import java.util.function.Predicate;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import java.io.FileReader;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.io.File;
+
+import org.json.simple.*;
+import org.json.simple.parser.JSONParser;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.xml.sax.SAXException;
+
 public class Main {
 	
 	static List<Client> clients;
@@ -68,14 +84,16 @@ public class Main {
 		LocalDate localDate = LocalDate.now().plusDays(2);
 		Date date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
 		
-		flows[0] = new Debit("debit", 1, 50.0, 1, true, date);
+		flows[0] = new Debit("debit", 1, 50.0, 1, false, date);
 		
 		int index = 1;
+		// Credits to current accounts
 		for (int i = 1; i < 10; i+=2) {
 			flows[index] = new Credit("credit", index, 100.50, i, false, date);
 			index++;
 		}
 		
+		// Credits to savings accounts
 		for (int i = 2; i < 11; i+=2) {
 			flows[index] = new Credit("credit", index, 1500, i, false, date);
 			index++;
@@ -110,26 +128,122 @@ public class Main {
 			}
 		});
 	}
-
 	
-	public static void main(String[] args) {
+	// 2.1 JSON file of flows
+	public static Flow[] loadFlows(String path) {
+		Flow[] flows = new Flow[12];
+		Path filePath = Paths.get(path);
+    	JSONParser parser = new JSONParser();
+    	SimpleDateFormat formatter = new SimpleDateFormat("YYYY-MM-DD", Locale.ENGLISH);
+  	
+	    try {
+	    	FileReader tFileReader = new FileReader(filePath.toFile());
+	    	JSONArray objects = (JSONArray) parser.parse(tFileReader);
+	    	
+	    	for (Object obj : objects) {
+	    		JSONObject flow = (JSONObject) obj;
+
+	    	    String comment = (String) flow.get("comment");
+	    	    int id = ((Long) flow.get("id")).intValue();
+	    	    Double amount = (Double) flow.get("amount");
+	    	    int targetAccount = ((Long) flow.get("targetAccount")).intValue();
+	    	    boolean effect = (boolean) flow.get("effect");
+	    	    Date date = formatter.parse((String) flow.get("date"));
+	    	    
+	    	    switch (comment) {
+				case "debit": {
+					flows[id - 1] = new Debit(comment, id, amount, targetAccount, effect, date);
+					break;
+				}
+				case "credit": {
+					flows[id - 1] = new Credit(comment, id, amount,targetAccount, effect, date);
+					break;
+				}
+				case "transfer": {
+					int issuingAccount = ((Long) flow.get("issuingAccount")).intValue();
+					flows[id - 1] = new Transfert(comment, id, amount, targetAccount, effect, date, issuingAccount);
+					break;
+				}
+				default: 
+					throw new IllegalArgumentException("Unexpected value: " + comment);
+	    	    }
+	    	}
+	    } catch (Exception e) {
+			System.err.println("Incorrect file path" + e);
+		}
+		
+		
+		return flows;
+	}
+	
+	public static List<Account> loadAccounts(String path) throws SAXException, IOException {
+		Path filePath = Paths.get(path);
+		List<Account> accounts = new ArrayList<>();
+		
+		try {
+			DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+			Document doc = builder.parse(filePath.toFile());
+			doc.normalize();
+			
+			NodeList nodeList = doc.getElementsByTagName("account");
+			Client client = null;
+			for (int i = 0; i < nodeList.getLength(); i++) {
+				String label = "";
+				Node node = nodeList.item(i);
+				NodeList children = node.getChildNodes();
+				
+				// A refacto
+				for (int j = 0; j < children.getLength(); j++) {
+					if (children.item(j).getNodeType() == 1 && "label".equals(children.item(j).getNodeName())) {
+						label = children.item(j).getTextContent();
+					}
+					if (children.item(j).getNodeType() == 1 && "client".equals(children.item(j).getNodeName())) {
+						NodeList childrenClient = children.item(j).getChildNodes();
+						String firstname = "";
+						String lastname = "";
+						int clientNumber = 0;
+						
+						for (int k = 0; k < childrenClient.getLength(); k++) {
+							if (childrenClient.item(k).getNodeType() == 1 && "firstname".equals(childrenClient.item(k).getNodeName()))
+								firstname = childrenClient.item(k).getTextContent();
+							if (childrenClient.item(k).getNodeType() == 1 && "lastname".equals(childrenClient.item(k).getNodeName()))
+								lastname = childrenClient.item(k).getTextContent();
+							if (childrenClient.item(k).getNodeType() == 1 && "clientNumber".equals(childrenClient.item(k).getNodeName()))
+								clientNumber = Integer.valueOf(childrenClient.item(k).getTextContent());
+						}
+						if (client == null || !(client.getFirstName().equals(firstname)) || !(client.getLastName().equals(lastname))) {
+							client = new Client(firstname, lastname);
+							client.setClientNumber(clientNumber);
+						}
+					}
+				}
+				if ("current".equals(label))
+					accounts.add(new CurrentAccount(label, client));
+				else {
+					accounts.add(new SavingsAcount(label, client));
+				}	
+			}
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
+		}
+		return accounts;
+	}
+	
+	public static void main(String[] args) throws SAXException, IOException {
 		clients = loadClients(5);
-		//displayClient(clients);
+		displayClient(clients);
 		
-		accounts = loadAccounts(clients);
-		
+		//accounts = loadAccounts(clients);
+		accounts = loadAccounts("accounts.xml");
 		//displayAccounts(accounts);
 		
 		hash = createHashMap(accounts);
 		
-		flows = loadFlows();
+		//flows = loadFlows();
+		flows = loadFlows("flow.json");
 		applyFlow(hash, flows);
 		
 		displayHash(hash);
 		
-
-		
-		
-
 	}
 }

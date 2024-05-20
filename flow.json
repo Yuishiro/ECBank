@@ -1,0 +1,100 @@
+[
+	{
+		"comment": "debit",
+		"id": 1,
+		"amount": 50.0,
+		"targetAccount": 1,
+		"effect": true,
+		"date": "2024-05-17"
+	},
+	{
+		"comment": "credit",
+		"id": 2,
+		"amount": 100.50,
+		"targetAccount": 1,
+		"effect": true,
+		"date": "2024-05-17"
+	},
+	{
+		"comment": "credit",
+		"id": 3,
+		"amount": 100.50,
+		"targetAccount": 3,
+		"effect": true,
+		"date": "2024-05-17"
+	},
+	{
+		"comment": "credit",
+		"id": 4,
+		"amount": 100.50,
+		"targetAccount": 5,
+		"effect": true,
+		"date": "2024-05-17"
+	},
+	{
+		"comment": "credit",
+		"id": 5,
+		"amount": 100.50,
+		"targetAccount": 7,
+		"effect": true,
+		"date": "2024-05-17"
+	},
+	{
+		"comment": "credit",
+		"id": 6,
+		"amount": 100.50,
+		"targetAccount": 9,
+		"effect": true,
+		"date": "2024-05-17"
+	},
+	{
+		"comment": "credit",
+		"id": 7,
+		"amount": 1500.0,
+		"targetAccount": 2,
+		"effect": true,
+		"date": "2024-05-17"
+	},
+	{
+		"comment": "credit",
+		"id": 8,
+		"amount": 1500.0,
+		"targetAccount": 4,
+		"effect": true,
+		"date": "2024-05-17"
+	},
+	{
+		"comment": "credit",
+		"id": 9,
+		"amount": 1500.0,
+		"targetAccount": 6,
+		"effect": true,
+		"date": "2024-05-17"
+	},
+	{
+		"comment": "credit",
+		"id": 10,
+		"amount": 1500.0,
+		"targetAccount": 8,
+		"effect": true,
+		"date": "2024-05-17"
+	},
+	{
+		"comment": "credit",
+		"id": 11,
+		"amount": 1500.0,
+		"targetAccount": 10,
+		"effect": true,
+		"date": "2024-05-17"
+	},
+	{
+		"comment": "transfer",
+		"id": 12,
+		"amount": 50.0,
+		"targetAccount": 2,
+		"effect": true,
+		"date": "2024-05-17",
+		"issuingAccount": 1
+	}
+
+]
