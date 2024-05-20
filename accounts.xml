@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<accounts>
+    <account>
+        <label>current</label>
+        <client>
+            <firstname>firstname1</firstname>
+            <lastname>name1</lastname>
+            <clientNumber>1</clientNumber>
+        </client>
+    </account>
+
+    <account>
+        <label>saving</label>
+        <client>
+            <firstname>firstname1</firstname>
+            <lastname>name1</lastname>
+            <clientNumber>1</clientNumber>
+        </client>
+    </account>
+    <account>
+        <label>current</label>
+        <client>
+            <firstname>firstname2</firstname>
+            <lastname>name2</lastname>
+            <clientNumber>2</clientNumber>
+        </client>
+    </account>
+    <account>
+        <label>saving</label>
+        <client>
+            <firstname>firstname2</firstname>
+            <lastname>name2</lastname>
+            <clientNumber>2</clientNumber>
+        </client>
+    </account>
+    <account>
+        <label>current</label>
+
+        <client>
+            <firstname>firstname3</firstname>
+            <lastname>name3</lastname>
+            <clientNumber>3</clientNumber>
+        </client>
+    </account>
+    <account>
+        <label>saving</label>
+
+        <client>
+            <firstname>firstname3</firstname>
+            <lastname>name3</lastname>
+            <clientNumber>3</clientNumber>
+        </client>
+    </account> 
+    <account>
+        <label>current</label>
+        <client>
+            <firstname>firstname4</firstname>
+            <lastname>name4</lastname>
+            <clientNumber>4</clientNumber>
+        </client>
+    </account>
+    <account>
+        <label>saving</label>
+
+        <client>
+            <firstname>firstname4</firstname>
+            <lastname>name4</lastname>
+            <clientNumber>4</clientNumber>
+        </client>
+    </account>
+    <account>
+        <label>current</label>
+
+        <client>
+            <firstname>firstname5</firstname>
+            <lastname>name5</lastname>
+            <clientNumber>5</clientNumber>
+        </client>
+    </account>
+    <account>
+        <label>saving</label>
+
+        <client>
+            <firstname>firstname5</firstname>
+            <lastname>name5</lastname>
+            <clientNumber>5</clientNumber>
+        </client>
+    </account>
+</accounts>
